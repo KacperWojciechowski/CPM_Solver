@@ -39,6 +39,7 @@ namespace OpRes
 
 		/* Algorithmic interface */
 		auto CPM_methode() ->std::vector<Path>;
+		auto inverse_CPM_methode() -> std::vector<Path>;
 
 	private:
 		std::size_t node_count;							/**< Amount of tasks within the network */
@@ -47,6 +48,12 @@ namespace OpRes
 		std::vector<int32_t> departure_times;			/**< Departure times for each vertex within the network */
 	
 		std::vector<std::vector<uint32_t>> net;			/**< The network topologically sorted structure */
+
+		/* Load the cost matrix */
+		auto load_cost_matrix(std::istream& input) -> void;
+
+		/* Create the net structure */
+		auto prepare_net() -> void;
 
 		/* Internal search function for the CPM method */
 		auto critical_DFS(std::vector<Path>& paths, std::vector<std::size_t>& path, std::size_t vertex) -> void;

@@ -5,6 +5,7 @@
  */
 auto OpRes::operator<<(std::ostream& stream, const OpRes::Path& p) -> std::ostream&
 {
+	/*
 	stream << "Length: " << p.length << " units\n";
 
 	for (std::size_t i = 0; auto & vertex : p.path)
@@ -19,7 +20,7 @@ auto OpRes::operator<<(std::ostream& stream, const OpRes::Path& p) -> std::ostre
 	stream << '\n';
 	stream << std::flush;
 
-	return stream;
+	return stream;*/ 
 }
 
 

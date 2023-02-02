@@ -50,9 +50,9 @@ namespace
 
 namespace OpRes
 {
-    auto CostMatrixTextFileParser::readSourceAndFillMatrix(CostMatrix& matrix, std::string& path) -> void 
+    auto CostMatrixTextFileParser::readSourceAndFillMatrix(CostMatrix& matrix, std::optional<std::string> path) -> void
     {
-        std::ifstream file(path);
+        std::ifstream file(*path);
 
         if(file.good())
         {

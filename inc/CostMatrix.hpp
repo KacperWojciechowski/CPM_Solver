@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <iomanip>
 #include <vector>
 #include <stdexcept>
 #include <ranges>
@@ -65,6 +67,20 @@ namespace OpRes {
         inline auto setJobTransitionCost(std::size_t sourceJobID, std::size_t targetJobID, int jobTransitionCost)
         {
             matrix[sourceJobID][targetJobID] = jobTransitionCost;
+        }
+
+        friend auto operator << (std::ostream& out, const CostMatrix& costMatrix)
+        {
+            out << "[\n";
+            for (auto row : costMatrix.matrix)
+            {
+                for (auto job : row)
+                {
+                    out << std::right << std::setw(3) << job << " ";
+                }
+                out << "\n";
+            }
+            out << "]\n";
         }
 
     private:

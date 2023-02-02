@@ -1,9 +1,8 @@
 #pragma once
 
 #include <string>
-#include <iostream>
-#include <vector>
 #include <stdexcept>
+#include <optional>
 
 #include <CostMatrix.hpp>
 
@@ -13,7 +12,7 @@ namespace OpRes
     {
         public:
 
-        virtual auto readSourceAndFillMatrix(CostMatrix& matrix, std::string& path) -> void = 0;
+        virtual auto readSourceAndFillMatrix(CostMatrix& matrix, std::optional<std::string> path) -> void = 0;
 
         protected:
 

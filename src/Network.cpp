@@ -3,7 +3,7 @@
 /**
  * Output stream operator for the Path.
  */
-auto OpRes::operator<<(std::ostream& stream, const OpRes::Path& p) -> std::ostream&
+auto operator<<(std::ostream& stream, const OpRes::Path& p) -> std::ostream&
 {
 	/*
 	stream << "Length: " << p.length << " units\n";
@@ -19,8 +19,8 @@ auto OpRes::operator<<(std::ostream& stream, const OpRes::Path& p) -> std::ostre
 	}
 	stream << '\n';
 	stream << std::flush;
-
-	return stream;*/ 
+	*/
+	return stream;
 }
 
 

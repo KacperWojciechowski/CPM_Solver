@@ -17,18 +17,6 @@ namespace OpRes
         [[nodiscard]] auto buildEmpty() -> Network;
 
         private:
-        auto assertFileParserSet() -> void
-        {
-            if(!parser)
-            {
-                throw std::runtime_error("Parser not set");
-            }
-        }
-
-        auto assertMatrixIsSquare() -> void
-        {
-
-        }
 
         ICostMatrixParser* parser = nullptr;
     };

@@ -6,8 +6,6 @@
 
 
 namespace OpRes {
-    constexpr int NO_EDGE = -1;
-    constexpr int INVERTED_NO_EDGE = 1;
 
     using Row = std::vector<int>;
     using Matrix = std::vector<Row>;
@@ -18,8 +16,11 @@ namespace OpRes {
     class CostMatrix
     {
     public:
+
+        static constexpr int NO_EDGE = -1;
+        static constexpr int INVERTED_NO_EDGE = 1;
+
         friend class NetBuilder;
-        friend class ICostMatrixParser;
 
         inline auto setJobCount(std::size_t jobsCount) -> void
         {

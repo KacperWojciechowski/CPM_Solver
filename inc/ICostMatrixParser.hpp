@@ -3,6 +3,7 @@
 #include <string>
 #include <stdexcept>
 #include <optional>
+#include <algorithm>
 
 #include <CostMatrix.hpp>
 
@@ -13,15 +14,11 @@ namespace OpRes
         public:
 
         virtual auto readSourceAndFillMatrix(CostMatrix& matrix, std::optional<std::string> path) -> void = 0;
+        virtual ~ICostMatrixParser() {};
 
-        protected:
-
-        auto assertRowFits(const CostMatrix& matrix, const Row& row) -> void
+        [[nodiscard]] static auto countSeparators(std::string& line, const char separator) noexcept -> std::size_t
         {
-            if (not (matrix.getJobsCount() == row.size()))
-            {
-                throw std::invalid_argument("Row has different size than the matrix width");
-            }
+            return std::count(line.begin(), line.end(), separator);
         }
     };
 }

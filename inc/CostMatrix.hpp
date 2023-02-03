@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <vector>
 #include <stdexcept>
-#include <ranges>
 
 
 namespace OpRes {
@@ -24,42 +23,26 @@ namespace OpRes {
 
         friend class NetBuilder;
 
-        inline auto setJobCount(std::size_t jobsCount) -> void
+        inline auto setJobCount(std::size_t newJobsCount) -> void
         {
-            assertJobsCountHigherThanCurrent(jobsCount);
-            matrix.reserve(jobsCount);
-            for(auto& row : matrix)
-            {
-                row.reserve(jobsCount);
-            }
-        }
+            assertJobsCountHigherThanCurrent(newJobsCount);
 
-        inline auto appendJob() -> void
-        {
-            for (auto& row : matrix)
-            {
-                row.emplace_back(NO_EDGE);
-            }
-            Row row(matrix[0].size(), NO_EDGE);
-            matrix.emplace_back(std::move(row));
-        }
+            auto columnAndRowSize = matrix.size();
+            auto jobsCountToAppend = newJobsCount - columnAndRowSize;
 
-        inline auto removeJob(std::size_t jobID) -> void
-        {
-            for (auto& row : matrix)
-            {
-                row.erase(std::next(row.begin(), jobID));
-            }
-            matrix.erase(std::next(matrix.begin(), jobID));
+            appendJobsToExistingRows(newJobsCount, jobsCountToAppend);
+            appendRowsToMatchNewJobsCount(newJobsCount, jobsCountToAppend);
+
+            assertMatrixIsSquare();
         }
 
         [[nodiscard]] inline auto getJobsCount() const -> std::size_t
         {
             assertMatrixNotEmpty();
-            return matrix[0].size();
+            return matrix.size();
         }
 
-        [[nodiscard]] inline auto getTransitionCost(std::size_t prevJobID, std::size_t nextJobID) const -> int
+        [[nodiscard]] inline auto getJobTransitionCost(std::size_t prevJobID, std::size_t nextJobID) const -> int
         {
             return matrix[prevJobID][nextJobID];
         }
@@ -69,12 +52,17 @@ namespace OpRes {
             matrix[sourceJobID][targetJobID] = jobTransitionCost;
         }
 
-        friend auto operator << (std::ostream& out, const CostMatrix& costMatrix)
+        inline auto setJobTransitionRow(std::size_t currentJobID, Row&& row)
+        {
+            matrix[currentJobID] = row;
+        }
+
+        friend auto operator<< (std::ostream& out, const CostMatrix& costMatrix)
         {
             out << "[\n";
-            for (auto row : costMatrix.matrix)
+            for (const auto& row : costMatrix.matrix)
             {
-                for (auto job : row)
+                for (const auto& job : row)
                 {
                     out << std::right << std::setw(3) << job << " ";
                 }
@@ -83,11 +71,53 @@ namespace OpRes {
             out << "]\n";
         }
 
+        inline auto assertRowFits(const Row& row) -> void
+        {
+            if (not (getJobsCount() == row.size()))
+            {
+                throw std::invalid_argument("Row has different size than the matrix width");
+            }
+        }
+
     private:
 
         CostMatrix();
 
-        auto assertMatrixNotEmpty() const -> void
+        inline auto appendRowsToMatchNewJobsCount(std::size_t newJobsCount, std::size_t jobsCountToAppend) -> void
+        {
+            matrix.reserve(newJobsCount);
+            for(auto i = 0; i < jobsCountToAppend; i++)
+            {
+                matrix.emplace_back(newJobsCount, OpRes::CostMatrix::NO_EDGE);
+            }
+        }
+
+        inline auto appendJobsToExistingRows(std::size_t newJobsCount, std::size_t jobsCountToAppend) -> void
+        {
+            for(auto& row : matrix)
+            {
+                row.reserve(newJobsCount);
+                row.insert(row.end(), jobsCountToAppend, OpRes::CostMatrix::NO_EDGE);
+            }
+        }
+
+        [[nodiscard]] inline auto isRowTheSameSizeAsColumn(const Row& row) const -> bool
+        {
+            return row.size() != matrix.size();
+        }
+
+        inline auto assertMatrixIsSquare() const -> void
+        {
+            for(const auto& row : matrix)
+            {
+                if (not isRowTheSameSizeAsColumn(row))
+                {
+                    throw std::runtime_error("CostMatrix is not square");
+                }
+            }
+        }
+
+        inline auto assertMatrixNotEmpty() const -> void
         {
             if (matrix.size() == 0)
             {
@@ -95,7 +125,7 @@ namespace OpRes {
             }
         }
 
-        auto assertJobsCountHigherThanCurrent(std::size_t jobsCount) const -> void
+        inline auto assertJobsCountHigherThanCurrent(std::size_t jobsCount) const -> void
         {
             if (matrix.size() < jobsCount)
             {

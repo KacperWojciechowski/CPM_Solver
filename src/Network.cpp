@@ -1,33 +1,36 @@
-#include "Network.h"
+#include <Network.h>
 
-/**
- * Output stream operator for the Path.
- */
-auto operator<<(std::ostream& stream, const OpRes::Path& p) -> std::ostream&
+#include <stdexcept>
+
+namespace
 {
-	/*
-	stream << "Length: " << p.length << " units\n";
-
-	for (std::size_t i = 0; auto & vertex : p.path)
+	auto assertJobExists(const OpRes::Network& network, std::size_t jobId) -> void
 	{
-		stream << vertex;;
-		if (i < p.path.size() - 1)
+		if (network.getJobCount() < jobId)
 		{
-			stream << " -> ";
+			throw std::invalid_argument("Job with given ID is not present in the network");
 		}
-		i++;
 	}
-	stream << '\n';
-	stream << std::flush;
-	*/
-	return stream;
 }
 
+namespace OpRes {
 
+	auto Network::getJob(std::size_t jobId) -> Job&
+	{
+		assertJobExists(*this, jobId);
 
+		auto jobIdFilter = [jobId](auto& job) -> bool
+		{
+			return job.id == jobId;
+		};
 
-OpRes::Path::Path(std::vector<std::size_t> path, int32_t length)
-	: path(path),
-	length(length)
-{
+		for(auto& layer : layers)
+		{
+			auto foundJob = std::ranges::find_if(layer.begin(), layer.end(), jobIdFilter);
+			if(foundJob != layer.end())
+			{
+				return *foundJob;
+			}
+		}
+	}
 }

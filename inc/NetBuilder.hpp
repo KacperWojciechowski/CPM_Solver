@@ -19,5 +19,6 @@ namespace OpRes
         private:
 
         ICostMatrixParser* parser = nullptr;
+        Network network;
     };
 }

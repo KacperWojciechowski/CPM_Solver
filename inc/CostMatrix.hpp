@@ -81,7 +81,7 @@ namespace OpRes {
 
     private:
 
-        CostMatrix();
+        CostMatrix() {};
 
         inline auto appendRowsToMatchNewJobsCount(std::size_t newJobsCount, std::size_t jobsCountToAppend) -> void
         {

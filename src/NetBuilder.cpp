@@ -1,5 +1,9 @@
 #include <NetBuilder.hpp>
 
+#include <CostMatrix.hpp>
+
+#include <stdexcept>
+
 namespace
 {
     auto assertFileParserSet(OpRes::ICostMatrixParser* parser) -> void
@@ -17,6 +21,14 @@ namespace OpRes
     {
         assertFileParserSet(parser);
 
+        CostMatrix costMatrix;
+        parser->readSourceAndFillMatrix(costMatrix, filePath);
 
+        // create new network instance
+        network = {};
+
+        // add filling network with data
+
+        return network;
     }
 }

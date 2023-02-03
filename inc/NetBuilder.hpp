@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdexcept>
-
 #include <Network.h>
 #include <ICostMatrixParser.hpp>
 
@@ -9,14 +7,14 @@ namespace OpRes
 {
     class NetBuilder
     {
-        public:
+    public:
 
         auto setFileParser(const ICostMatrixParser* fileParser) -> void;
 
         [[nodiscard]] auto buildFromFile(const std::string& filePath) -> Network;
         [[nodiscard]] auto buildEmpty() -> Network;
 
-        private:
+    private:
 
         ICostMatrixParser* parser = nullptr;
         Network network;

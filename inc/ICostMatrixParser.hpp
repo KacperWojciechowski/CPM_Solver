@@ -11,7 +11,7 @@ namespace OpRes
 {
     class ICostMatrixParser
     {
-        public:
+    public:
 
         virtual auto readSourceAndFillMatrix(CostMatrix& matrix, std::optional<std::string> path) -> void = 0;
         virtual ~ICostMatrixParser() {};

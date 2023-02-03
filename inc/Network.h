@@ -10,7 +10,7 @@ namespace OpRes
 {
 	class Network
 	{
-		public:
+	public:
 
 		struct Job
 		{
@@ -29,7 +29,7 @@ namespace OpRes
 
 		[[nodiscard]] inline auto getJob(std::size_t jobId) -> Job&;
 
-		private:
+	private:
 
 		Network() {};
 

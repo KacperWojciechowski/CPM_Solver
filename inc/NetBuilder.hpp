@@ -12,7 +12,6 @@ namespace OpRes
         auto setFileParser(const ICostMatrixParser* fileParser) -> void;
 
         [[nodiscard]] auto buildFromFile(const std::string& filePath) -> Network;
-        [[nodiscard]] auto buildEmpty() -> Network;
 
     private:
 

@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 project(CPM_solver)
 
 set(SolverSources src/Network.cpp
-                  src/CostMatrixTextFileParser.cpp
+                  src/JobMatrixTextFileParser.cpp
                   src/NetBuilder.cpp)
 add_library(Solver ${SolverSources})
 target_include_directories(Solver PUBLIC inc)

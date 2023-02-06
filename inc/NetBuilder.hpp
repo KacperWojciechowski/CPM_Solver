@@ -1,7 +1,7 @@
 #pragma once
 
-#include <CostMatrix.hpp>
-#include <ICostMatrixParser.hpp>
+#include <IJobMatrixParser.hpp>
+#include <JobMatrix.hpp>
 #include <Network.h>
 
 
@@ -11,68 +11,73 @@ namespace OpRes
     {
     public:
         NetBuilder()
-        : costMatrix(),
+        : jobMatrix(),
         network()
         {}
 
-        inline auto setDataParser(const ICostMatrixParser* fileParser) -> void
+        inline auto setDataParser(const IJobMatrixParser* fileParser) -> void
         {
             parser = fileParser;
         }
 
-        [[nodiscard]] auto getCostMatrix() -> CostMatrix&
+        [[nodiscard]] auto getJobMatrix() -> JobMatrix&
         {
-            return costMatrix;
+            return jobMatrix;
         }
 
         [[nodiscard]] auto createNewNetwork() -> NetBuilder&
         {
             network = {};
+            return *this;
         }
 
-        [[nodiscard]] auto appendJob(Job&& job) -> NetBuilder&
+        [[nodiscard]] auto appendJob() -> NetBuilder&
         {
-            costMatrix.appendJob(std::move(job));
+            jobMatrix.appendJob();
+            return *this;
         }
 
-        [[nodiscard]] auto changeJobTransitionCost(std::size_t sourceJobId, std::size_t targetJobId, int cost) -> NetBuilder&;
+        [[nodiscard]] auto setJobTransitionCost(std::size_t sourceJobId, std::size_t targetJobId, int cost) -> NetBuilder&
         {
-            costMatrix.changeJobTransitionCost(sourceJobId, targetJobId, cost);
+            jobMatrix.setJobTransitionCost(sourceJobId, targetJobId, cost);
+            return *this;
         }
 
         [[nodiscard]] auto eraseJob(std::size_t jobId) -> NetBuilder&
         {
-            costMatrix.eraseJob(jobId);
+            jobMatrix.eraseJob(jobId);
+            return *this;
         }
 
-        [[nodiscard]] inline auto removeTransition(std::size_t sourceJobId, std::size_t targetJobId)
+        [[nodiscard]] inline auto removeTransition(std::size_t sourceJobId, std::size_t targetJobId) -> NetBuilder&
         {
-            costMatrix.changeTransitionCost(sourceJobId, targetJobId, OpRes::CostMatrix::NO_EDGE);
+            jobMatrix.setJobTransitionCost(sourceJobId, targetJobId, OpRes::JobMatrix::NO_EDGE);
+            return *this;
         }
 
         [[nodiscard]] auto setJobCount(const std::size_t jobCount) -> NetBuilder&
         {
-            costMatrix.setJobCount(jobCount);
+            jobMatrix.setJobCount(jobCount);
+            return *this;
         }
 
         [[nodiscard]] auto sortIntoNetwork() -> NetBuilder&
         {
-            network.sortIntoNetwork(costMatrix);
+            network.sortIntoNetwork(jobMatrix);
+            return *this;
         }
 
         [[nodiscard]] auto sourceDataFile(const std::string& filePath) -> NetBuilder&;
 
         [[nodiscard]] auto build() -> Network
         {
-            auto tempNetwork = std::move(network);
-            createNewNetwork();
-            return tempNetwork;
+            return network;
         }
 
     private:
 
-        ICostMatrixParser* parser = nullptr;
-        CostMatrix costMatrix;
+        const IJobMatrixParser* parser = nullptr;
+        JobMatrix jobMatrix;
         Network network;
     };
 }

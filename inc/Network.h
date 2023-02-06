@@ -6,26 +6,27 @@
 #include <list>
 #include <vector>
 
+#include <INetworkInstance.hpp>
+
 namespace OpRes
 {
-	class Network
+	class NetBuilder;
+	class JobMatrix;
+
+	struct Job
+	{
+		std::string jobDesc;
+		std::size_t id;
+		int earliestEntryBoundary;
+		int latestLeaveBoundary;
+	};
+
+	class Network : public INetworkInstance
 	{
 	public:
-
-		struct Job
-		{
-			std::string jobDesc;
-			std::size_t id;
-			int earliestEntryBoundary;
-			int latestLeaveBoundary;
-		};
-
 		using Layer = std::vector<Job>;
 
-		[[nodiscard]] inline auto getJobCount() const noexcept -> std::size_t
-		{
-			return jobCount;
-		}
+		friend NetBuilder;
 
 		[[nodiscard]] inline auto getJob(std::size_t jobId) -> Job&;
 
@@ -33,7 +34,8 @@ namespace OpRes
 
 		Network() {};
 
-		std::size_t jobCount;
+		auto sortIntoNetwork(const JobMatrix& jobMatrix) noexcept -> void;
+
 		std::list<Layer> layers;
 
 	};

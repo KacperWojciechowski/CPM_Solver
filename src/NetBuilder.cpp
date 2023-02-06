@@ -1,12 +1,10 @@
 #include <NetBuilder.hpp>
 
-#include <CostMatrix.hpp>
-
 #include <stdexcept>
 
 namespace
 {
-    auto assertFileParserSet(OpRes::ICostMatrixParser* parser) -> void
+    auto assertFileParserSet(const OpRes::IJobMatrixParser* parser) -> void
     {
         if(!parser)
         {
@@ -17,18 +15,10 @@ namespace
 
 namespace OpRes
 {
-    auto NetBuilder::buildFromFile(const std::string& filePath) -> Network
+    auto NetBuilder::sourceDataFile(const std::string& filePath) -> NetBuilder&
     {
         assertFileParserSet(parser);
-
-        CostMatrix costMatrix;
-        parser->readSourceAndFillMatrix(costMatrix, filePath);
-
-        // create new network instance
-        network = {};
-
-        // add filling network with data
-
-        return network;
+        parser->readSourceAndFillMatrix(jobMatrix, filePath);
+        return *this;
     }
 }

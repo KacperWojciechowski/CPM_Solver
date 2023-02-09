@@ -51,7 +51,6 @@ namespace
         while(not file.eof())
         {
             OpRes::Row costRow = parseLine(file, jobsCount);
-            matrix.assertRowFits(costRow);
             matrix.setJobTransitionRow(currentJobID++, std::move(costRow));
         }
     }

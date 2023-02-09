@@ -4,7 +4,9 @@
 #include <iomanip>
 #include <vector>
 #include <stdexcept>
+#include <concepts>
 
+#include <CustomConcepts.hpp>
 
 namespace OpRes {
 
@@ -38,23 +40,28 @@ namespace OpRes {
 
         [[nodiscard]] inline auto getJobsCount() const
         {
-            assertMatrixNotEmpty();
             return matrix.size();
         }
 
-        [[nodiscard]] inline auto getJobTransitionCost(std::size_t prevJobID, std::size_t nextJobID) const
+        [[nodiscard]] inline auto getJobTransitionCost(std::size_t sourceJobId, std::size_t targetJobId) const
         {
-            return matrix[prevJobID][nextJobID];
+            assertIndexWithinRange(sourceJobId);
+            assertIndexWithinRange(targetJobId);
+            return matrix[sourceJobId][targetJobId];
         }
 
-        inline auto setJobTransitionCost(std::size_t sourceJobID, std::size_t targetJobID, int jobTransitionCost)
+        inline auto setJobTransitionCost(std::size_t sourceJobId, std::size_t targetJobId, int jobTransitionCost)
         {
-            matrix[sourceJobID][targetJobID] = jobTransitionCost;
+            assertIndexWithinRange(sourceJobId);
+            assertIndexWithinRange(targetJobId);
+            matrix[sourceJobId][targetJobId] = jobTransitionCost;
         }
 
-        inline auto setJobTransitionRow(std::size_t currentJobID, Row&& row)
+        inline auto setJobTransitionRow(std::size_t sourceJobId, Row&& row)
         {
-            matrix[currentJobID] = row;
+            assertIndexWithinRange(sourceJobId);
+            assertRowFits(row);
+            matrix[sourceJobId] = row;
         }
 
         friend auto operator<< (std::ostream& out, const JobMatrix& jobMatrix)
@@ -71,31 +78,35 @@ namespace OpRes {
             out << "]\n";
         }
 
-        inline auto assertRowFits(const Row& row)
+        inline auto appendJob(std::size_t count)
         {
-            if (not (getJobsCount() == row.size()))
+            setJobCount(getJobsCount() + count);
+        }
+
+        auto eraseJob(SortableUnsignedIntegralRange auto rangeOfJobsToErase)
+        {
+            std::ranges::sort(rangeOfJobsToErase);
+
+            for (auto rIter = rangeOfJobsToErase.rbegin(); rIter != rangeOfJobsToErase.rend(); rIter++)
             {
-                throw std::invalid_argument("Row has different size than the matrix width");
+                matrix.erase(std::next(matrix.begin(), *rIter));
+            }
+            for (auto rIter = rangeOfJobsToErase.rbegin(); rIter != rangeOfJobsToErase.rend(); rIter++)
+            {
+                std::for_each(matrix.begin(), matrix.end(), [rIter](auto& row)
+                {
+                    row.erase(std::next(row.begin(), *rIter));
+                });
             }
         }
 
-        inline auto appendJob()
+        auto eraseJob(std::size_t jobToErase)
         {
-            for(auto& row : matrix)
+            matrix.erase(std::next(matrix.begin(), jobToErase));
+            std::for_each(matrix.begin(), matrix.end(), [&jobToErase](auto& row)
             {
-                row.emplace_back(JobMatrix::NO_EDGE);
-            }
-            Row& row = matrix[0];
-            matrix.emplace_back(row.size(), JobMatrix::NO_EDGE);
-        }
-
-        auto eraseJob(auto jobId) -> void
-        {
-            for (auto& row : matrix)
-            {
-                row.erase(row.begin(), std::next(row.begin(), jobId));
-            }
-            matrix.erase(matrix.begin(), std::next(matrix.begin(), jobId));
+                row.erase(std::next(row.begin(), jobToErase));
+            });
         }
 
     private:
@@ -149,6 +160,22 @@ namespace OpRes {
             if (matrix.size() < jobsCount)
             {
                 throw std::invalid_argument("Attempting to set jobs count smaller than current");
+            }
+        }
+
+        inline auto assertIndexWithinRange(const auto index) const -> void
+        {
+            if (not (index < matrix.size()))
+            {
+                throw std::invalid_argument("Index out of bounds");
+            }
+        }
+
+        inline auto assertRowFits(const Row& row) -> void
+        {
+            if (not (getJobsCount() == row.size()))
+            {
+                throw std::invalid_argument("Row has different size than the matrix width");
             }
         }
 

@@ -31,9 +31,9 @@ namespace OpRes
             return *this;
         }
 
-        [[nodiscard]] auto appendJob() -> NetBuilder&
+        [[nodiscard]] auto appendJob(std::size_t count) -> NetBuilder&
         {
-            jobMatrix.appendJob();
+            jobMatrix.appendJob(count);
             return *this;
         }
 

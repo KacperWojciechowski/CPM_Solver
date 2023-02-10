@@ -33,4 +33,28 @@ namespace OpRes {
 			}
 		}
 	}
+
+	friend auto operator<< (std::ostream& out, const Network& net) -> std::ostream&
+	{
+		out << "{\n";
+		for (auto index = 0; const auto& layer : net.layers)
+		{
+			out << "\tLayer " << index << "\n\t\t[";
+			for (auto index2 = 0; const auto& job : layer)
+			{
+				out << job.id;
+				if (++index2 < layer.size())
+				{
+					out << ", ";
+				}
+			}
+			out << "]\n";
+			if (++index < net.layers.size())
+			{
+				out << "\n";
+			}
+		}
+		out << "}\n";
+		return out;
+	}
 }

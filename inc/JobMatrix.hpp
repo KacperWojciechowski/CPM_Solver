@@ -19,7 +19,6 @@ namespace OpRes {
     class JobMatrix
     {
     public:
-
         static constexpr int NO_EDGE = -1;
         static constexpr int INVERTED_NO_EDGE = 1;
 
@@ -89,13 +88,13 @@ namespace OpRes {
 
             for (auto rIter = rangeOfJobsToErase.rbegin(); rIter != rangeOfJobsToErase.rend(); rIter++)
             {
-                matrix.erase(std::next(matrix.begin(), *rIter));
+                matrix.erase(matrix.begin() + *rIter);
             }
             for (auto rIter = rangeOfJobsToErase.rbegin(); rIter != rangeOfJobsToErase.rend(); rIter++)
             {
                 std::for_each(matrix.begin(), matrix.end(), [rIter](auto& row)
                 {
-                    row.erase(std::next(row.begin(), *rIter));
+                    row.erase(row.begin() + *rIter);
                 });
             }
         }

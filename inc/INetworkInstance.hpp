@@ -11,15 +11,5 @@ namespace OpRes
         }
 
         virtual ~INetworkInstance() {};
-
-    protected:
-
-        virtual auto setJobCount(std::size_t targetJobCount) noexcept -> void
-        {
-            jobCount = targetJobCount;
-        }
-
-    private:
-        std::size_t jobCount;
     };
 }

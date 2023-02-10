@@ -61,7 +61,7 @@ namespace OpRes
             return *this;
         }
 
-        [[nodiscard]] auto sortIntoNetwork() -> NetBuilder&
+        [[nodiscard]] auto sortIntoNetworkForCPMMode(Network::CPMMode mode) -> NetBuilder&
         {
             network.sortIntoNetwork(jobMatrix);
             return *this;
@@ -69,8 +69,9 @@ namespace OpRes
 
         [[nodiscard]] auto sourceDataFile(const std::string& filePath) -> NetBuilder&;
 
-        [[nodiscard]] auto build() -> Network
+        [[nodiscard]] auto buildForCPMMode(Network::CPMMode mode) -> Network
         {
+            network.sortIntoNetwork(jobMatrix, mode);
             return network;
         }
 

@@ -13,28 +13,29 @@ namespace OpRes
 	class NetBuilder;
 	class JobMatrix;
 
-	struct Job
-	{
-		std::string jobDesc;
-		std::size_t id;
-		int earliestEntryBoundary;
-		int latestLeaveBoundary;
-	};
-
 	class Network : public INetworkInstance
 	{
 	public:
+		enum class CPMMode
+		{
+			MinimalTransitionCostSequence,
+			MaximalTransitionCostSequence`
+		}
+
 		using Layer = std::vector<Job>;
 
 		friend NetBuilder;
 
-		[[nodiscard]] inline auto getJob(std::size_t jobId) -> Job&;
+		[[nodiscard]] inline auto getJob(std::size_t jobId) const noexcept -> Job&;
+		[[nodiscard]] auto criticalPathMethod() noexcept -> std::list<Path>;
 
+		friend auto operator<< (std::ostream& out, const Network& net) -> std::ostream&;
 	private:
 
 		Network() {};
 
-		auto sortIntoNetwork(const JobMatrix& jobMatrix) noexcept -> void;
+		auto sortIntoNetwork(const JobMatrix& jobMatrix, CPMMode mode) noexcept -> void;
+		auto prepareWeightsAccordingToMode() noexcept -> void;
 
 		std::list<Layer> layers;
 

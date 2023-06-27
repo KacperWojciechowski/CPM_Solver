@@ -6,10 +6,11 @@ project(CPMSolver)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 add_subdirectory(src)
+add_subdirectory(lib)
 
 target_link_libraries(${PROJECT_NAME}
-                      Solver)
-                      #pugixml)
+                      Solver
+                      pugixml)
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -pedantic -Werror)

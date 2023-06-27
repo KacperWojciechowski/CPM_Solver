@@ -2,23 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_CXX_STANDARD 20)
 
-project(CPM_solver)
+project(CPMSolver)
 
-set(SolverSources src/Network.cpp
-                  src/JobMatrixTextFileParser.cpp
-                  src/NetBuilder.cpp)
-add_library(Solver ${SolverSources})
-target_include_directories(Solver PUBLIC inc)
+add_executable(${PROJECT_NAME} src/main.cpp)
+add_subdirectory(src)
 
-add_executable(Exec src/main.cpp)
-
-target_link_libraries(Exec
+target_link_libraries(${PROJECT_NAME}
                       Solver)
+                      #pugixml)
 
-set_target_properties(Exec PROPERTIES CXX_STANDARD 20)
-target_compile_features(Exec PUBLIC cxx_std_20)
-target_include_directories(Exec PUBLIC inc)
+target_include_directories(${PROJECT_NAME} PUBLIC inc)
+target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -pedantic -Werror)
 
-target_compile_options(Exec PUBLIC -Wall -Wextra -pedantic -Werror)
-
-add_custom_target(run_solver COMMAND ./Exec DEPENDS Exec)
+add_custom_target(run_solver COMMAND ./${PROJECT_NAME} DEPENDS ${PROJECT_NAME})

@@ -4,12 +4,12 @@ namespace
 {
     using cpm::data::JobList;
 
-    auto printJobInfo(std::ostream& out, JobList::JobInfo& jobInfo) -> void;
+    auto printJobInfo(std::ostream& out, const JobList::JobInfo& jobInfo) -> void
     {
-        out << "{Id: " << jobInfo->id << ", name: " << jobInfo->name << "}\n";
+        out << "{Id: " << jobInfo.id << ", name: " << jobInfo.name << "}\n";
     }
 
-    auto printConnections(std::ostream& out, std::size_t sourceJobId, JobList::JobConnectionsList& jobConnections)
+    auto printConnections(std::ostream& out, std::size_t sourceJobId, const JobList::JobConnectionsList& jobConnections) -> void
     {
         for (auto connItr = jobConnections.begin(); connItr != jobConnections.end(); connItr++)
         {

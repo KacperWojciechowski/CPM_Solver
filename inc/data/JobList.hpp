@@ -32,6 +32,7 @@ public:
     };
     
     using JobIterator = std::vector<std::shared_ptr<JobInfo>>::iterator;
+    using JobConnectionsList = std::vector<JobConnection>;
 
     
     inline auto setNodesCount(std::size_t count) -> void
@@ -104,13 +105,17 @@ private:
         return std::next(jobInfo.begin(), jobItr->second);
     }
 
-    [[no_discard]] inline auto getConnectionReference(std::size_t jobId) -> std::vector<JobConnection>&
+    [[no_discard]] inline auto getConnectionReference(std::size_t jobId) -> JobConnectionsList&
     {
         return list[jobToIndexMap.at(jobId)];
     }
 
     std::vector<std::shared_ptr<JobInfo>> jobInfo;
-    std::vector<std::vector<JobConnection>> list; 
-    std::unordered_map<std::size_t, std::size_t> jobToIndexMap; 
+    std::vector<JobConnectionsList> list; 
+
+    using JobIndex = std::size_t;
+    using VectorIndex = std::size_t;
+
+    std::unordered_map<JobIndex, VectorIndex> jobToIndexMap; 
 };
 } // namespace cpm::data

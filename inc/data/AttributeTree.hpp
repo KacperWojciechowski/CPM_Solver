@@ -1,23 +1,18 @@
 #include <set>
 #include <string>
+#include <variant>
 
 namespace cpm::data
 {
 class AttributeTree
 {
-    union Value 
-    {
-        std::size_t asSizet;
-        int asInt;
-        std::string asString;
-        double asDouble;
-    };
+    using Value = std::variant<std::size_t, int, std::string, double>;
 
     struct Node
     {
         std::string name;
         Value value;
         std::set<Node> children;
-    }
-}
-}
+    };
+};
+} // namespace cpm::data

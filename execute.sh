@@ -1,10 +1,19 @@
 #! /bin/sh
 
-rm stdout.out err.out;
-mkdir build;
+if [ -f "./stdout.out" ]
+then
+    rm stdout.out;
+fi
+if [ -f "./err.out" ]
+then
+    rm err.out;
+fi 
+if [ ! -d "./build" ]
+then
+    mkdir build;
+fi
 cd build;
 cmake ..;
 make;
-cp CPMSolver ../;
 cd ..;
-`./CPMSolver >stdout.out 2>err.out`;
+`build/CPMSolver >./stdout.out 2>./err.out`;

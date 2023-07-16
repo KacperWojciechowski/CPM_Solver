@@ -6,38 +6,42 @@
 #include <iostream>
 #include <unordered_map>
 #include <memory>
+#include <iostream>
 
 namespace cpm::serializers 
 {
     class XmlSerializer;
 } // namespace cpm::serializers
 
-namespace cpm::data {
-class JobList {
-    public:
+namespace cpm::data 
+{
+class JobList 
+{
+public:
 
-    friend cpm::serializers::XmlSerializer;
-
-    using JobIterator = std::unordered_map<std::size_t, std::size_t>::iterator;
-
-    struct JobInfo {
+    struct JobInfo 
+    {
         std::size_t id;
         std::string name;
     };
 
-    struct JobConnection {
+    struct JobConnection 
+    {
         std::weak_ptr<JobInfo> jobInfo;
         int cost;
     };
+    
+    using JobIterator = std::vector<std::shared_ptr<JobInfo>>::iterator;
 
     
     inline auto setNodesCount(std::size_t count) -> void
     {
-        try {
+        try 
+        {
             list.resize(count);
-        } catch (std::length_error e) {
-            std::cerr << "[JobList][std::vector] Unable to resize, desired size exceeds list.max_size()" << std::endl;
-        } catch (std::exception e) {
+        } 
+        catch (std::exception e) 
+        {
             std::cerr << "[JobList] " << e.what() << std::endl;
         }
     }
@@ -49,43 +53,60 @@ class JobList {
 
     inline auto connectNeighbourTo(std::size_t sourceJobId, std::size_t jobIdToAppend, int cost) -> void
     {
-        auto targetJobItr = validateJob(sourceJobId);
-        auto neighbourJobItr = validateJob(jobIdToAppend);
-
-        getJobReferenceFromList(targetJobItr).emplace_back(getJobInfoSharedPtr(neighbourJobItr), cost);
+        auto jobToAppendItr = getJobItr(jobIdToAppend);
+        if (jobToAppendItr != jobInfo.end())
+        {
+            try 
+            {
+                getConnectionReference(sourceJobId).emplace_back(*getJobItr(jobIdToAppend), cost);
+            } 
+            catch (std::exception e) 
+            {
+                std::cerr << "[JobList] " << e.what() << std::endl;
+            }
+        }
     }
 
-    inline auto appendJob(JobInfo jobToAppend)
+    inline auto appendJob(JobInfo jobToAppend) -> void
     {
         jobInfo.emplace_back(std::make_shared<JobInfo>(jobToAppend));
     }
 
-    inline auto removeJob(std::size_t jobId)
+    inline auto removeJob(std::size_t jobId) -> void
     {
-        auto jobItr = validateJob(jobId);
-        jobInfo.erase(std::next(jobInfo.begin(), jobItr->second));
+        auto jobItr = getJobItr(jobId);
+        if (jobItr != jobInfo.end())
+        {
+            jobInfo.erase(jobItr);
+        }
     }
 
-    private:
+    inline auto editJob(std::size_t jobId, JobInfo editedJob) -> void
+    {
+        auto jobItr = getJobItr(jobId);
+        if (jobItr != jobInfo.end())
+        {
+            **jobItr = std::move(editedJob);
+        }
+    }
 
-    [[no_discard]] inline auto validateJob(std::size_t jobId) -> JobIterator
+    friend auto operator<< (std::ostream& out, const JobList& jobList) -> std::ostream&;
+
+private:
+
+    [[no_discard]] inline auto getJobItr(std::size_t jobId) -> JobIterator
     {
         auto jobItr = jobToIndexMap.find(jobId);
         if (jobItr == jobToIndexMap.end()) 
         {
             throw std::invalid_argument("No job of given id exists");
         }
-        return jobItr;
+        return std::next(jobInfo.begin(), jobItr->second);
     }
 
-    [[no_discard]] inline auto getJobReferenceFromList(JobIterator jobItr) -> std::vector<JobConnection>&
+    [[no_discard]] inline auto getConnectionReference(std::size_t jobId) -> std::vector<JobConnection>&
     {
-        return list[jobItr->second];
-    }
-
-    [[no_discard]] inline auto getJobInfoSharedPtr(JobIterator jobItr) -> std::shared_ptr<JobInfo>
-    {
-        return jobInfo[jobItr->second];
+        return list[jobToIndexMap.at(jobId)];
     }
 
     std::vector<std::shared_ptr<JobInfo>> jobInfo;

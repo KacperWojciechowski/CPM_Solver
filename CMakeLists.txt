@@ -10,9 +10,10 @@ add_subdirectory(lib)
 
 target_link_libraries(${PROJECT_NAME}
                       Solver
+                      Data
                       pugixml)
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc)
-target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -pedantic -Werror)
+target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -pedantic -Werror -Wattributes -Wunused)
 
 add_custom_target(run_solver COMMAND ./${PROJECT_NAME} DEPENDS ${PROJECT_NAME})

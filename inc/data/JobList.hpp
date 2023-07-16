@@ -47,7 +47,7 @@ public:
         }
     }
 
-    [[no_discard]] inline auto getJobsCount() const noexcept -> std::size_t
+    [[nodiscard]] inline auto getJobsCount() const noexcept -> std::size_t
     {
         return jobInfo.size();
     }
@@ -95,7 +95,7 @@ public:
 
 private:
 
-    [[no_discard]] inline auto getJobItr(std::size_t jobId) -> JobIterator
+    [[nodiscard]] inline auto getJobItr(std::size_t jobId) -> JobIterator
     {
         auto jobItr = jobToIndexMap.find(jobId);
         if (jobItr == jobToIndexMap.end()) 
@@ -105,7 +105,7 @@ private:
         return std::next(jobInfo.begin(), jobItr->second);
     }
 
-    [[no_discard]] inline auto getConnectionReference(std::size_t jobId) -> JobConnectionsList&
+    [[nodiscard]] inline auto getConnectionReference(std::size_t jobId) -> JobConnectionsList&
     {
         return list[jobToIndexMap.at(jobId)];
     }

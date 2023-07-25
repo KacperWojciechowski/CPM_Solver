@@ -1,4 +1,5 @@
-set (DataSrc JobList.cpp)
+set(DATA_SOURCES data/AttributeTree.cpp
+                 data/JobList.cpp)
 
-add_library(Data ${DataSrc})
-target_include_directories(Data PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+add_library(Data ${DATA_SOURCES})
+target_include_directories(Data PRIVATE inc)

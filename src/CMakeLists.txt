@@ -1,13 +1,6 @@
 add_subdirectory(ut)
+add_subdirectory(data)
+add_subdirectory(solver)
 
-set(DATA_SOURCES data/AttributeTree.cpp
-                 data/JobList.cpp)
-
-add_library(Data ${DATA_SOURCES})
-target_include_directories(Data PRIVATE inc)
-
-
-set(SOLVER_SOURCES solver/NetworkBuilder.cpp)
-
-add_library(Solver ${SOLVER_SOURCES})
-target_include_directories(Solver PRIVATE inc)
+add_library(UTs INTERFACE)
+target_link_libraries(UTs INTERFACE Data_UT)

@@ -8,40 +8,35 @@
 #include <memory>
 #include <iostream>
 
-namespace cpm::serializers 
+namespace cpm::data
 {
-    class XmlSerializer;
-} // namespace cpm::serializers
-
-namespace cpm::data 
-{
-class JobList 
+class JobList
 {
 public:
 
-    struct JobInfo 
+    struct JobInfo
     {
         std::size_t id;
         std::string name;
     };
 
-    struct JobConnection 
+    struct JobConnection
     {
         std::weak_ptr<JobInfo> jobInfo;
         int cost;
     };
-    
+
     using JobIterator = std::vector<std::shared_ptr<JobInfo>>::iterator;
     using JobConnectionsList = std::vector<JobConnection>;
 
-    
+
     inline auto setNodesCount(std::size_t count) -> void
     {
-        try 
+        try
         {
             list.resize(count);
-        } 
-        catch (std::exception e) 
+        }
+        catch (const std::exception& e)
         {
             std::cerr << "[JobList] " << e.what() << std::endl;
         }
@@ -57,11 +52,11 @@ public:
         auto jobToAppendItr = getJobItr(jobIdToAppend);
         if (jobToAppendItr != jobInfo.end())
         {
-            try 
+            try
             {
-                getConnectionReference(sourceJobId).emplace_back(*getJobItr(jobIdToAppend), cost);
-            } 
-            catch (std::exception e) 
+                getConnectionReference(sourceJobId).emplace_back(JobConnection{*getJobItr(jobIdToAppend), cost});
+            }
+            catch (const std::exception& e)
             {
                 std::cerr << "[JobList] " << e.what() << std::endl;
             }
@@ -98,7 +93,7 @@ private:
     [[nodiscard]] inline auto getJobItr(std::size_t jobId) -> JobIterator
     {
         auto jobItr = jobToIndexMap.find(jobId);
-        if (jobItr == jobToIndexMap.end()) 
+        if (jobItr == jobToIndexMap.end())
         {
             throw std::invalid_argument("No job of given id exists");
         }
@@ -111,11 +106,11 @@ private:
     }
 
     std::vector<std::shared_ptr<JobInfo>> jobInfo;
-    std::vector<JobConnectionsList> list; 
+    std::vector<JobConnectionsList> list;
 
     using JobIndex = std::size_t;
     using VectorIndex = std::size_t;
 
-    std::unordered_map<JobIndex, VectorIndex> jobToIndexMap; 
+    std::unordered_map<JobIndex, VectorIndex> jobToIndexMap;
 };
 } // namespace cpm::data

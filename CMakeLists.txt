@@ -23,18 +23,18 @@ add_subdirectory(src)
 add_subdirectory(lib)
 
 add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} PUBLIC inc)
+target_include_directories(${PROJECT_NAME} INTERFACE inc)
 target_link_libraries(${PROJECT_NAME} INTERFACE
                       Data
                       Solver
                       pugixml)
 
 add_executable(${PROJECT_NAME}-UT src/ut/empty.cpp)
-target_include_directories(${PROJECT_NAME}-UT PUBLIC inc ${GTEST_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME}-UT
                       gtest
                       gmock
                       gtest_main
+                      UTs
                       ${PROJECT_NAME})
 
 add_custom_target(ut COMMAND ./${PROJECT_NAME}-UT DEPENDS ${PROJECT_NAME}-UT)

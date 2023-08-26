@@ -2,12 +2,11 @@
 #include <string>
 #include <iostream>
 
-namespace solver 
+namespace solver
 {
-class NetworkBuilder 
+class NetworkBuilder
 {
 public:
-
     NetworkBuilder& getFromXml(std::string xmlFilePath);
 
     void printJobList();

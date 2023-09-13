@@ -98,7 +98,7 @@ private:
         {
             throw std::invalid_argument("No job of given id exists");
         }
-        return std::next(jobInfo.begin(), jobItr->second);
+        return std::next(jobInfo.begin(), static_cast<long>(jobItr->second));
     }
 
     [[nodiscard]] auto getConnectionReference(std::size_t jobId) -> JobConnections&

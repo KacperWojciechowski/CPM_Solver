@@ -9,7 +9,7 @@ namespace
         out << "{Id: " << jobInfo.id << ", name: " << jobInfo.name << "}\n";
     }
 
-    auto printConnections(std::ostream& out, std::size_t sourceJobId, const JobList::JobConnectionsList& jobConnections) -> void
+    auto printConnections(std::ostream& out, std::size_t sourceJobId, const JobList::JobConnections& jobConnections) -> void
     {
         for (auto connItr = jobConnections.begin(); connItr != jobConnections.end(); connItr++)
         {
@@ -33,7 +33,7 @@ namespace cpm::data
         out << "Connections:\n";
         for (auto itr = jobList.jobToIndexMap.begin(); itr != jobList.jobToIndexMap.end(); itr++)
         {
-            printConnections(out, itr->first, jobList.list[itr->second]);
+            printConnections(out, itr->first, jobList.connections[itr->second]);
         }
         return out;
     }

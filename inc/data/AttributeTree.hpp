@@ -30,7 +30,9 @@ public:
     class Node
     {
     public:
-
+        Node() {}
+        Node(std::string name, Value value) : name(name), value(value) {}
+        
         // dodać getChildren
         // dodać getvalue
 
@@ -52,6 +54,6 @@ public:
     }
 
 private:
-    Node root = {"DataType", "", {}};
+    Node root = {"DataType", ""};
 };
 } // namespace cpm::data

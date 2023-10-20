@@ -1,59 +1,82 @@
-#include <set>
 #include <string>
-#include <string_view>
 #include <variant>
+#include <vector>
 
 namespace cpm::data
 {
 class AttributeTree
 {
 public:
-    using Value = std::variant<std::size_t, int, std::string, double>;
 
-    class Node;
-
-    class NodeSet
-    {
-    public:
-        // dodać iteratory
-
-        // dodać gettery
-
-        // dodać appendy
-
-    private:
-        friend AttributeTree;
-
-        std::set<Node> children;
-    };
 
     class Node
     {
     public:
-        Node() {}
-        Node(std::string name, Value value) : name(name), value(value) {}
-        
-        // dodać getChildren
-        // dodać getvalue
+        using Subnodes = std::vector<Node>;
+        using Value = std::variant<std::size_t, int, std::string, double>;
 
+        Node() = default;
+        Node(std::string name, Value value, Subnodes children = {})
+        {
+            this->name = name;
+            this->value = value;
+            this->children = children;
+        }
+
+        template<typename T>
+        inline T getValue();
+
+        std::string getName()
+        {
+            return name;
+        }
+
+        Subnodes& getChildren()
+        {
+            return children;
+        }
+
+        Node& setName(std::string name)
+        {
+            this->name = name;
+            return *this;
+        }
+
+        template<typename T>
+        Node& setValue(T value)
+        {
+            this->value = value;
+            return *this;
+        }
+
+        template<typename T>
+        Node& appendChild(std::string name, T value)
+        {
+            children.emplace_back(name, value);
+            return *this;
+        }
     private:
-        friend AttributeTree;
 
         std::string name;
         Value value;
-        NodeSet children;
+        Subnodes children;
     };
 
-    // dodać print
-
-    // dodać getchildren
-
-    auto setDataType(std::string dataName) -> void
+    Node& getRoot()
     {
-        root.value = std::move(dataName);
+        return root;
+    }
+
+    void reset()
+    {
+        root = {};
     }
 
 private:
+<<<<<<< HEAD
     Node root = {"DataType", ""};
+=======
+    Node root = {};
+>>>>>>> 361df27 (refactored AttributeTree and Node class, refactored testing?)
 };
 } // namespace cpm::data

@@ -13,7 +13,6 @@ namespace cpm::data
 class JobList
 {
 public:
-
     struct JobInfo
     {
         std::size_t id;
@@ -28,7 +27,6 @@ public:
 
     using JobIterator = std::vector<std::shared_ptr<JobInfo>>::iterator;
     using JobConnections = std::vector<JobConnection>;
-
 
     auto setNodesCount(std::size_t count) noexcept -> void
     try
@@ -90,7 +88,6 @@ public:
     friend auto operator<< (std::ostream& out, const JobList& jobList) -> std::ostream&;
 
 private:
-
     [[nodiscard]] auto getJobItr(std::size_t jobId) -> JobIterator
     {
         auto jobItr = jobToIndexMap.find(jobId);

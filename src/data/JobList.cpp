@@ -1,6 +1,6 @@
 #include <data/JobList.hpp>
 
-namespace 
+namespace
 {
     using cpm::data::JobList;
 
@@ -15,7 +15,7 @@ namespace
         {
             auto jobInfoPtr = connItr->jobInfo.lock();
             if (jobInfoPtr)
-            out << "{Src Id: " << sourceJobId << " Target Id: " << jobInfoPtr->id << "}\n"; 
+            out << "{Src Id: " << sourceJobId << " Target Id: " << jobInfoPtr->id << "}\n";
         }
     }
 }

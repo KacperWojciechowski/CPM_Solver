@@ -1,24 +1,49 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 
-set(CMAKE_CXX_STANDARD 20)
+project(CPMSolver CXX)
 
-project(CPM_solver)
+SET(CMAKE_CXX_STANDARD 20)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SolverSources src/Network.cpp
-                  src/JobMatrixTextFileParser.cpp
-                  src/NetBuilder.cpp)
-add_library(Solver ${SolverSources})
-target_include_directories(Solver PUBLIC inc)
+set(GTEST_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/lib/googletest/googletest/include")
 
-add_executable(Exec src/main.cpp)
+if (MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /permissive-")
+endif()
 
-target_link_libraries(Exec
-                      Solver)
+add_subdirectory(src)
+add_subdirectory(lib)
+add_subdirectory(test)
 
-set_target_properties(Exec PROPERTIES CXX_STANDARD 20)
-target_compile_features(Exec PUBLIC cxx_std_20)
-target_include_directories(Exec PUBLIC inc)
+if (NOT MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -Wformat -Werror -Wunused -Wattributes")
+endif()
 
-target_compile_options(Exec PUBLIC -Wall -Wextra -pedantic -Werror)
+add_subdirectory(src)
 
-add_custom_target(run_solver COMMAND ./Exec DEPENDS Exec)
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG release-1.11.0
+)
+FetchContent_MakeAvailable(googletest)
+
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE inc test/mocks)
+target_link_libraries(${PROJECT_NAME} INTERFACE
+                      Data
+                      Solver
+                      pugixml)
+
+file(MAKE_DIRECTORY ut_runtimes)
+
+add_custom_target(ut)
+add_dependencies(ut DATA_UT)
+
+enable_testing()
+
+add_test(
+	NAME allTests
+	COMMAND tests
+)

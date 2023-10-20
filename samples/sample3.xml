@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<JobMatrix>
+    <Jobs>
+    <Job>
+        <ID>1</ID>
+        <Name>Task 1</Name>
+    </Job>
+    <Job>
+        <ID>2</ID>
+        <Name>Task 2</Name>
+    </Job>
+    <Job>
+        <ID>3</ID>
+        <Name>Task 3</Name>
+    </Job>
+    <Job>
+        <ID>4</ID>
+        <Name>Task 4</Name>
+    </Job>
+    <Job>
+        <ID>5</ID>
+        <Name>Task 5</Name>
+    </Job>
+    <Job>
+        <ID>6</ID>
+        <Name>Task 6</Name>
+    </Job>
+    <Job>
+        <ID>7</ID>
+        <Name>Task 7</Name>
+    </Job>
+    </Jobs>
+    <Connections>
+        <Connection>
+            <SourceID>1</SourceID>
+            <DestinationID>2</DestinationID>
+            <Cost>8</Cost>
+        </Connection>
+        
+        <Connection>
+            <SourceID>1</SourceID>
+            <DestinationID>3</DestinationID>
+            <Cost>4</Cost>
+        </Connection>
+        
+        <Connection>
+            <SourceID>1</SourceID>
+            <DestinationID>4</DestinationID>
+            <Cost>2</Cost>
+        </Connection>
+        
+        <Connection>
+            <SourceID>2</SourceID>
+            <DestinationID>4</DestinationID>
+            <Cost>4</Cost>
+        </Connection>
+        
+        <Connection>
+            <SourceID>2</SourceID>
+            <DestinationID>5</DestinationID>
+            <Cost>4</Cost>
+        </Connection>
+        
+        <Connection>
+            <SourceID>3</SourceID>
+            <DestinationID>6</DestinationID>
+            <Cost>13</Cost>
+        </Connection>
+        
+        <Connection>
+            <SourceID>4</SourceID>
+            <DestinationID>6</DestinationID>
+            <Cost>5</Cost>
+        </Connection>
+        
+        <Connection>
+            <SourceID>5</SourceID>
+            <DestinationID>7</DestinationID>
+            <Cost>3</Cost>
+        </Connection>
+        
+        <Connection>
+            <SourceID>6</SourceID>
+            <DestinationID>7</DestinationID>
+            <Cost>5</Cost>
+        </Connection>
+        
+    </Connections>
+</JobMatrix>

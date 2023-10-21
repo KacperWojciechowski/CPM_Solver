@@ -14,6 +14,11 @@ namespace cpm::data {
     };
 
     template<typename T>
-    concept Parsable = Unpackable<T> and Packable<T>;
+    concept HasPattern = requires() {
+        {T::getAttributeTreePattern()} -> std::same_as<AttributeTree>;
+    };
+
+    template<typename T>
+    concept Parsable = Unpackable<T> and Packable<T> and HasPattern<T>;
 }
 

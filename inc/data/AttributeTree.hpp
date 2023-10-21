@@ -23,7 +23,7 @@ public:
         }
 
         template<typename T>
-        T getValue()
+        auto getValue() -> T
         {
             if (std::holds_alternative<T>(value))
             {
@@ -35,31 +35,31 @@ public:
             }
         }
 
-        std::string getName()
+        auto getName() -> std::string
         {
             return name;
         }
 
-        Subnodes& getChildren()
+        auto getChildren() -> Subnodes&
         {
             return children;
         }
 
-        Node& setName(std::string name)
+        auto setName(std::string name) -> Node&
         {
             this->name = name;
             return *this;
         }
 
         template<typename T>
-        Node& setValue(T value)
+        auto setValue(T value) -> Node&
         {
             this->value = value;
             return *this;
         }
 
         template<typename T>
-        Node& appendChild(std::string name, T value)
+        auto appendChild(std::string name, T value) -> Node&
         {
             children.emplace_back(name, value);
             return *this;
@@ -71,12 +71,12 @@ public:
         Subnodes children;
     };
 
-    Node& getRoot()
+    auto getRoot() -> Node&
     {
         return root;
     }
 
-    void reset()
+    auto reset() -> void
     {
         root = {};
     }

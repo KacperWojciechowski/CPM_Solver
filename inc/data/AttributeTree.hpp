@@ -1,14 +1,13 @@
 #include <string>
 #include <variant>
 #include <vector>
+#include <stdexcept>
 
 namespace cpm::data
 {
 class AttributeTree
 {
 public:
-
-
     class Node
     {
     public:
@@ -24,7 +23,17 @@ public:
         }
 
         template<typename T>
-        T getValue();
+        T getValue()
+        {
+            if (std::holds_alternative<T>(value))
+            {
+                return std::get<T>(value);
+            }
+            else
+            {
+                throw std::invalid_argument("[Attribute Tree] The node does not hold this alternative");
+            }
+        }
 
         std::string getName()
         {

@@ -13,7 +13,6 @@ endif()
 
 add_subdirectory(src)
 add_subdirectory(lib)
-add_subdirectory(test)
 
 if (NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -Wformat -Werror -Wunused -Wattributes")
@@ -28,17 +27,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} INTERFACE inc test/mocks)
+target_include_directories(${PROJECT_NAME} INTERFACE inc)
 target_link_libraries(${PROJECT_NAME} INTERFACE
                       Data
                       Solver
                       pugixml)
 
-file(MAKE_DIRECTORY ut_runtimes)
-
-add_custom_target(ut)
-add_dependencies(ut DATA_UT)
-
+add_subdirectory(test)
 enable_testing()
 
 add_test(

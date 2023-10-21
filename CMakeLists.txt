@@ -19,8 +19,6 @@ if (NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -Wformat -Werror -Wunused -Wattributes")
 endif()
 
-add_subdirectory(src)
-
 include(FetchContent)
 FetchContent_Declare(
     googletest

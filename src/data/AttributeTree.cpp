@@ -6,7 +6,7 @@
 namespace cpm::data {
 
 template<typename T>
-inline T AttributeTree::Node::getValue()
+T AttributeTree::Node::getValue()
 {
     if (std::holds_alternative<T>(value))
     {

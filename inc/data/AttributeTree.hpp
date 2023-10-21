@@ -24,7 +24,7 @@ public:
         }
 
         template<typename T>
-        inline T getValue();
+        T getValue();
 
         std::string getName()
         {
@@ -73,10 +73,6 @@ public:
     }
 
 private:
-<<<<<<< HEAD
-    Node root = {"DataType", ""};
-=======
     Node root = {};
->>>>>>> 361df27 (refactored AttributeTree and Node class, refactored testing?)
 };
 } // namespace cpm::data

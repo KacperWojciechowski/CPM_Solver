@@ -10,6 +10,18 @@ template <cpm::data::Parsable DataType>
 class XmlSerializer
 {
 public:
+    struct Walker
+    {
+        Walker(std::vector<data::AttributeTree::Node>& attrTree)
+        {
+            this->attrTree = attrTree;
+        }
+
+        private:
+        data::AttributeTree& attrTree;
+
+    };
+
     auto deserialize(std::string_view input) -> DataType
     {
         pugi::xml_document doc;
@@ -29,16 +41,6 @@ public:
     auto serialize(const DataType& outputData, std::string_view output) -> void
     {
 
-    }
-
-    auto traverseDocumentAndBuildTree(pugi::xml_parse_result parsedFile, data::AttributeTree& attrTree) -> void
-    {
-        auto& currentNode = attrTree.getRoot();
-
-        while(currentNode.getChildren().size() > 0)
-        {
-
-        }
     }
 };
 } // namespace cpm::serializers

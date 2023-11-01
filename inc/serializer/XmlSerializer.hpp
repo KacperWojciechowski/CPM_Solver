@@ -1,6 +1,7 @@
 #pragma once
 
-#include <serializer/Serializer.hpp>
+#include <data/AttributeTree.hpp>
+#include <data/DataConcepts.hpp>
 
 #include <pugixml/src/pugixml.hpp>
 
@@ -10,17 +11,12 @@ template <cpm::data::Parsable DataType>
 class XmlSerializer
 {
 public:
-    struct Walker
+    auto traverseDocumentAndCreateTree(pugi::xml_parse_result parsedFile, cpm::data::AttributeTree pattern)
+        -> cpm::data::AttributeTree
     {
-        Walker(std::vector<data::AttributeTree::Node>& attrTree)
-        {
-            this->attrTree = attrTree;
-        }
-
-        private:
-        data::AttributeTree& attrTree;
-
-    };
+        cpm::data::AttributeTree result;
+        bool patternProcessed()
+    }
 
     auto deserialize(std::string_view input) -> DataType
     {
@@ -32,8 +28,8 @@ public:
             throw std::runtime_error("[XmlSerializer] Failed to parse file: " + input.get());
         }
 
-        auto attrTree = DataType::getAttributeTreePattern();
-        traverseDocumentAndFillValuesInTree(parsedFile, attrTree);
+        auto attrTreePattern = DataType::getAttributeTreePattern();
+        auto attrTree = traverseDocumentAndCreateTree(parsedFile, attrTreePattern);
         DataType result = {};
         result.unpackAttributeTree(attrTree);
     }

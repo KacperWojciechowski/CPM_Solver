@@ -2,12 +2,18 @@
 #include <variant>
 #include <vector>
 #include <stdexcept>
+#include <optional>
 
 namespace cpm::data
 {
 class AttributeTree
 {
 public:
+    AttributeTree(std::string rootName)
+    {
+        root.setName(rootName);
+    }
+
     class Node
     {
     public:
@@ -15,7 +21,7 @@ public:
         using Value = std::variant<std::size_t, int, std::string, double>;
 
         Node() = default;
-        Node(std::string name, Value value, Subnodes children = {})
+        Node(std::string name, std::optional<Value> value, Subnodes children = {})
         {
             this->name = name;
             this->value = value;
@@ -23,27 +29,40 @@ public:
         }
 
         template<typename T>
-        auto getValue() -> T
+        auto getValue() -> std::optional<T>
         {
-            if (std::holds_alternative<T>(value))
+            if (value && std::holds_alternative<T>(value.value()))
             {
-                return std::get<T>(value);
+                return std::get<T>(value.value());
             }
-            else
-            {
-                throw std::invalid_argument("[Attribute Tree] The node does not hold this alternative");
-            }
+            return std::nullopt;
         }
 
-        auto getName() -> std::string
+        auto getName() const noexcept -> std::string
         {
             return name;
         }
 
-        auto getChildren() -> Subnodes&
+        auto getChildren() noexcept -> Subnodes&
         {
             return children;
         }
+
+        auto getAttributes() noexcept -> Subnodes&
+        {
+            return attributes;
+        }
+
+        auto getChildren() const noexcept -> const Subnodes&
+        {
+            return children;
+        }
+
+        auto getAttributes() const noexcept -> const Subnodes&
+        {
+            return attributes;
+        }
+
 
         auto setName(std::string name) -> Node&
         {
@@ -58,17 +77,17 @@ public:
             return *this;
         }
 
-        template<typename T>
-        auto appendChild(std::string name, T value) -> Node&
+        template<typename T, typename OptVal = std::optional<T>>
+        auto appendChild(std::string name, OptVal value = std::nullopt) -> Node&
         {
             children.emplace_back(name, value);
             return *this;
         }
     private:
-
         std::string name;
-        Value value;
+        std::optional<Value> value;
         Subnodes children;
+        Subnodes attributes;
     };
 
     auto getRoot() -> Node&
@@ -78,7 +97,9 @@ public:
 
     auto reset() -> void
     {
-        root = {};
+        Node newRoot = {};
+        newRoot.setName(root.getName());
+        root = std::move(newRoot);
     }
 
 private:

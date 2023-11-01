@@ -5,7 +5,8 @@
 namespace cpm::serializers {
 auto XmlSerializer::dfsDeserializeTraverse(cpm::data::AttributeTree::Node& currentPatternNode,
                 cpm::data::AttributeTree::Node& currentResultNode,
-                pugi::xml_document& doc) const noexcept -> void
+                pugi::xml_document& doc)
+    const noexcept -> void
 {
     for (auto& node : currentPatternNode.getChildren())
     {

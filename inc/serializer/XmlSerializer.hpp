@@ -25,6 +25,7 @@ public:
         auto attrTree = traverseDocumentAndCreateTree(parsedFile, attrTreePattern);
         DataType result = {};
         result.unpackAttributeTree(attrTree);
+        return result;
     }
 
     template <cpm::data::Parsable DataType>

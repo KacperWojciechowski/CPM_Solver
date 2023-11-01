@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <variant>
 #include <vector>
@@ -29,7 +31,7 @@ public:
         }
 
         template<typename T>
-        auto getValue() -> std::optional<T>
+        auto getValue() const noexcept -> std::optional<T>
         {
             if (value && std::holds_alternative<T>(value.value()))
             {
@@ -77,8 +79,7 @@ public:
             return *this;
         }
 
-        template<typename T, typename OptVal = std::optional<T>>
-        auto appendChild(std::string name, OptVal value = std::nullopt) -> Node&
+        auto appendChild(std::string name, std::optional<Value> value = std::nullopt) -> Node&
         {
             children.emplace_back(name, value);
             return *this;
@@ -103,6 +104,6 @@ public:
     }
 
 private:
-    Node root = {};
+    Node root;
 };
 } // namespace cpm::data

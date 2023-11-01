@@ -7,25 +7,18 @@
 
 namespace cpm::serializers {
 
-template <cpm::data::Parsable DataType>
 class XmlSerializer
 {
 public:
-    auto traverseDocumentAndCreateTree(pugi::xml_parse_result parsedFile, cpm::data::AttributeTree pattern)
-        -> cpm::data::AttributeTree
-    {
-        cpm::data::AttributeTree result;
-        bool patternProcessed()
-    }
-
+    template <cpm::data::Parsable DataType>
     auto deserialize(std::string_view input) -> DataType
     {
         pugi::xml_document doc;
-        auto parsedFile = doc.load_file(input.get());
+        auto parsedFile = doc.load_file(input.data());
 
         if (not parsedFile)
         {
-            throw std::runtime_error("[XmlSerializer] Failed to parse file: " + input.get());
+            throw std::runtime_error(std::string("[XmlSerializer] Failed to parse file: ") + input.data());
         }
 
         auto attrTreePattern = DataType::getAttributeTreePattern();
@@ -34,9 +27,23 @@ public:
         result.unpackAttributeTree(attrTree);
     }
 
+    template <cpm::data::Parsable DataType>
     auto serialize(const DataType& outputData, std::string_view output) -> void
     {
 
     }
+
+private:
+    auto traverseDocumentAndCreateTree(pugi::xml_document doc, cpm::data::AttributeTree pattern)
+        -> cpm::data::AttributeTree
+    {
+        cpm::data::AttributeTree result(pattern.getRoot().getName());
+        dfsDeserializeTraverse(pattern.getRoot(), result.getRoot(), doc);
+        return result;
+    }
+
+    auto dfsDeserializeTraverse(cpm::data::AttributeTree::Node& currentPatternNode,
+                                cpm::data::AttributeTree::Node& currentResultNode,
+                                pugi::xml_document& doc) const noexcept -> void;
 };
 } // namespace cpm::serializers

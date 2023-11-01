@@ -1,3 +1,5 @@
+#pragma once
+
 #include <data/AttributeTree.hpp>
 
 #include <concepts>

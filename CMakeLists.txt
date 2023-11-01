@@ -31,6 +31,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE inc)
 target_link_libraries(${PROJECT_NAME} INTERFACE
                       Data
                       Solver
+                      Serializer
                       pugixml)
 
 add_subdirectory(test)

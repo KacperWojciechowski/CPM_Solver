@@ -1,4 +1,4 @@
-set(DATA_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/JobList.cpp)
+set(DATA_SOURCES JobList.cpp)
 
 add_library(Data ${DATA_SOURCES})
-target_include_directories(Data PRIVATE ${CMAKE_HOME_DIRECTORY}/inc)
+target_include_directories(Data PRIVATE ${CMAKE_HOME_DIRECTORY}/inc ${CMAKE_HOME_DIRECTORY}/lib)
